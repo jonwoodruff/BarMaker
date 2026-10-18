@@ -1,0 +1,35 @@
+{
+  "name": "@jonwoodruff/bar-maker",
+  "version": "0.1.0",
+  "description": "A reusable browser widget for performing short melodies into ABC notation",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md",
+    "THIRD_PARTY.md",
+    "src/music.js",
+    "LICENSE"
+  ],
+  "main": "./dist/bar-maker.js",
+  "module": "./dist/bar-maker.js",
+  "exports": {
+    ".": "./dist/bar-maker.js",
+    "./music": "./src/music.js"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "test": "node --test test/*.test.js",
+    "test:browser": "node test/browser.cjs"
+  },
+  "dependencies": {
+    "abcjs": "6.7.1",
+    "pitchy": "4.1.0"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1",
+    "vite": "8.3.4"
+  },
+  "private": true
+}
