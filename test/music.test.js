@@ -51,3 +51,8 @@ test('playback follows edited ABC accidentals, rests, ties and tempo',()=>{
   const sequence=sequenceFromABC('X:1\nM:3/4\nL:1/8\nQ:1/4=60\nK:C\n^F2 =F2 z2 | c3-c3 |');
   assert.deepEqual(sequence.notes.map(n=>n.midi),[66,65,72]);near(sequence.notes[2].start,3);near(sequence.notes[2].duration,3);near(sequence.duration,6);
 });
+
+test('inline tempo changes preserve real playback duration',()=>{
+  const sequence=sequenceFromABC('X:1\nM:4/4\nL:1/8\nQ:1/4=120\nK:C\nC8 | [Q:1/4=60]D8 |');
+  near(sequence.notes[0].duration,2);near(sequence.notes[1].duration,4);near(sequence.duration,6);
+});

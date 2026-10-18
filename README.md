@@ -103,4 +103,4 @@ Browser tests use installed Chrome on macOS, or Playwright Chromium elsewhere (`
 
 ## Repository and integration
 
-This directory is intended as an independent Git repository. The surrounding SongHymnComposition site uses a generated browser build in its static assets; that build is not required to work on this component independently. From the parent website, `python3 scripts/vendor_barmaker.py` rebuilds and refreshes its static copy. Keep the MIT licence and `THIRD_PARTY.md` with redistributed builds. The MIT software licence does not change the Creative Commons policy governing songs composed on the host website.
+This directory is an independent Git repository. The surrounding SongHymnComposition site uses a generated browser build in its static assets; that build is not required to work on this component independently. From the parent website, `python3 scripts/vendor_barmaker.py` rebuilds and refreshes its static copy. Keep the MIT licence and `THIRD_PARTY.md` with redistributed builds. The MIT software licence does not change the Creative Commons policy governing songs composed on the host website.

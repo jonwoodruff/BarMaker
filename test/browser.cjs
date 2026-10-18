@@ -60,6 +60,21 @@ const root=path.resolve(__dirname,'..');
   await page.evaluate(()=>{navigator.mediaDevices.getUserMedia=()=>Promise.reject(new DOMException('Test denial','NotAllowedError'));});
   await widget.locator('[data-ui=record]').click();await page.waitForFunction(()=>document.querySelector('bar-maker').state==='idle');assert.match(await widget.locator('[data-ui=status]').innerText(),/permission was not granted/);
   console.log('PASS denied microphone permission leaves widget ready for another input');
+
+  const kept=await output.inputValue();
+  await page.evaluate(()=>{navigator.mediaDevices.getUserMedia=()=>new Promise(resolve=>window.resolveMicrophone=resolve);});
+  await widget.locator('[data-ui=record]').click();await page.waitForFunction(()=>document.querySelector('bar-maker').state==='preparing');
+  await widget.locator('[data-ui=cancel]').click();
+  await page.evaluate(()=>{window.lateTrack={readyState:'live',stop(){this.readyState='ended';}};window.resolveMicrophone({getTracks:()=>[window.lateTrack]});});
+  await page.waitForFunction(()=>window.lateTrack.readyState==='ended');assert.equal(await output.inputValue(),kept);
+  console.log('PASS cancelled pending microphone permission releases late capture and preserves ABC');
+  await page.evaluate(async()=>{
+   const second=document.createElement('bar-maker');document.body.append(second);window.secondMaker=second;
+   second.configure({meter:'2/4',tempo:120,bars:1,countIn:false});second.shadowRoot.querySelector('[data-ui=mode]').value='microphone';
+   second.pitchSourceFactory=()=>({async start(){},stop(){window.removedPluginStopped=true;}});await second.record();second.remove();
+  });
+  assert(await page.evaluate(()=>window.removedPluginStopped&&window.secondMaker._engine.context===null));
+  console.log('PASS removing the component releases plugin and audio resources');
   await page.setViewportSize({width:390,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   assert.deepEqual(errors,[]);console.log('PASS mobile layout and no browser errors');
  }finally{await browser?.close();server.kill();}
